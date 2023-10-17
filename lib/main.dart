@@ -17,13 +17,19 @@ class TodoApp extends StatelessWidget {
   }
 }
 
-class ListTodoScreen extends StatelessWidget {
+class ListTodoScreen extends StatefulWidget {
   const ListTodoScreen({super.key});
 
+  @override
+  State<ListTodoScreen> createState() => _ListTodoScreenState();
+}
+
+class _ListTodoScreenState extends State<ListTodoScreen> {
   @override
   Widget build(BuildContext context) {
     var name = 'Soltec';
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text('List Todo'),
         actions: [
@@ -32,17 +38,114 @@ class ListTodoScreen extends StatelessWidget {
         ],
       ),
       body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(children: [
-          const SizedBox(height: 32),
-          Text(
-            "What's up, $name",
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
+        width: double.infinity,
+        margin: const EdgeInsets.only(left: 16, top: 24, right: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "What's up, $name",
+              style: const TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ]),
+            const Text(
+              'Below are list of my activities today',
+              style: TextStyle(fontSize: 16),
+            ),
+            const Divider(),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Card(
+                    elevation: 8,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Business',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Divider(
+                            color: Colors.purple,
+                            thickness: 3,
+                            height: 32,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 8,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Personal',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Divider(
+                            color: Colors.blue,
+                            thickness: 3,
+                            height: 32,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: Card(
+                margin: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                elevation: 8,
+                child: Container(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const SizedBox(width: 16),
+                            Radio(
+                              groupValue: null,
+                              onChanged: (Null? value) {},
+                              value: null,
+                            ),
+                            const SizedBox(width: 16),
+                            const Text('Daily meeting with team'),
+                          ],
+                        ),
+                        RadioListTile(
+                          title: const Text('Daily meeting with team'),
+                          value: null,
+                          groupValue: null,
+                          onChanged: (val) {},
+                        ),
+                      ],
+                    )),
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: CircleAvatar(
         radius: 24.0,
