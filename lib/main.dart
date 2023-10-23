@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'add_todo.dart';
+
 void main() {
   runApp(const TodoApp());
 }
@@ -112,28 +114,24 @@ class _ListTodoScreenState extends State<ListTodoScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 16),
+            const Text(' Today\'s Todo',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54,
+                )),
             const SizedBox(height: 8),
             Expanded(
-              child: Card(
-                margin: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-                elevation: 8,
-                child: Container(
-                    width: double.infinity,
+              child: ListView.builder(
+                itemCount: 6,
+                itemBuilder: (BuildContext context, index) {
+                  return Card(
+                    margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+                    elevation: 4,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            const SizedBox(width: 16),
-                            Radio(
-                              groupValue: null,
-                              onChanged: (Null? value) {},
-                              value: null,
-                            ),
-                            const SizedBox(width: 16),
-                            const Text('Daily meeting with team'),
-                          ],
-                        ),
                         RadioListTile(
                           title: const Text('Daily meeting with team'),
                           value: null,
@@ -141,7 +139,9 @@ class _ListTodoScreenState extends State<ListTodoScreen> {
                           onChanged: (val) {},
                         ),
                       ],
-                    )),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -150,7 +150,13 @@ class _ListTodoScreenState extends State<ListTodoScreen> {
       floatingActionButton: CircleAvatar(
         radius: 24.0,
         child: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const AddTodo(),
+              ),
+            );
+          },
           icon: const Icon(Icons.add),
         ),
       ),
