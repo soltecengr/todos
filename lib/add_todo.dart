@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddTodo extends StatefulWidget {
   const AddTodo({super.key});
@@ -11,12 +14,50 @@ class AddTodo extends StatefulWidget {
 class _AddTodoState extends State<AddTodo> {
   late TextEditingController titleController;
   late TextEditingController desController;
+  late DateTime? dueDate;
 
   @override
   void initState() {
     titleController = TextEditingController();
     desController = TextEditingController();
+    dueDate = DateTime.now();
     super.initState();
+  }
+
+  Future<void> showDateTimePicker(BuildContext context) async {
+    var initialDate = DateTime.now();
+    dueDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2024),
+    );
+    showToast(
+      '${dueDate?.day}-${dueDate?.month}-${dueDate?.year}',
+      duration: const Duration(seconds: 5),
+    );
+  }
+
+  Future<void> saveTask() async {
+    showToast(titleController.text);
+
+    Map<String, String> task = {
+      'title': titleController.text,
+      'description': desController.text,
+      'dueDate': '${dueDate?.day}-${dueDate?.month}-${dueDate?.year}',
+    };
+    saveTodoToSharedPref(task);
+  }
+
+  Future<void> saveTodoToSharedPref(Map<String, String> task) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String todos = prefs.getString('todos') ?? '[]';
+    List todoList = jsonDecode(todos);
+    todoList.add(task);
+    await prefs.setString('todos', jsonEncode(todoList));
+    titleController.text = '';
+    desController.text = '';
+    showToast('Task has been saved successfully');
   }
 
   @override
@@ -40,7 +81,7 @@ class _AddTodoState extends State<AddTodo> {
             TextField(
               controller: titleController,
               decoration: const InputDecoration(
-                label: Text('Todo Tiele'),
+                label: Text('Todo Title'),
               ),
             ),
             const SizedBox(height: 16),
@@ -53,9 +94,7 @@ class _AddTodoState extends State<AddTodo> {
             ),
             const SizedBox(height: 24),
             GestureDetector(
-              onTap: () {
-                showToast('On tapping this widget the clock widget will show');
-              },
+              onTap: () => showDateTimePicker(context),
               child: Row(
                 children: const [
                   Icon(Icons.timer),
@@ -69,12 +108,7 @@ class _AddTodoState extends State<AddTodo> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {
-                showToast(
-                  'Todo has been saved successfully',
-                  duration: const Duration(seconds: 1),
-                );
-              },
+              onPressed: saveTask,
               child: const Text('Save Todo'),
             )
           ],

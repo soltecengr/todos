@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'add_todo.dart';
 
@@ -30,6 +33,21 @@ class ListTodoScreen extends StatefulWidget {
 }
 
 class _ListTodoScreenState extends State<ListTodoScreen> {
+  List todoList = [];
+
+  @override
+  void initState() {
+    getTodoList();
+    super.initState();
+  }
+
+  Future<void> getTodoList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String todos = prefs.getString('todos') ?? '[]';
+    todoList = jsonDecode(todos);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     var name = 'Soltec';
@@ -127,7 +145,7 @@ class _ListTodoScreenState extends State<ListTodoScreen> {
             const SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
-                itemCount: 6,
+                itemCount: todoList.length,
                 itemBuilder: (BuildContext context, index) {
                   return Card(
                     margin: const EdgeInsets.fromLTRB(4, 4, 4, 4),
@@ -136,7 +154,23 @@ class _ListTodoScreenState extends State<ListTodoScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         RadioListTile(
-                          title: const Text('Daily meeting with team'),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${todoList[index]['title']}',
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                '${todoList[index]['dueDate']}',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ],
+                          ),
+                          subtitle: Text('${todoList[index]['description']}'),
                           value: null,
                           groupValue: null,
                           onChanged: (val) {},
