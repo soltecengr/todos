@@ -56,7 +56,12 @@ class _ListTodoScreenState extends State<ListTodoScreen> {
       appBar: AppBar(
         title: const Text('List Todo'),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          IconButton(
+            onPressed: () {
+              getTodoList();
+            },
+            icon: const Icon(Icons.refresh),
+          ),
           IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
         ],
       ),

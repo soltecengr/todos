@@ -39,8 +39,6 @@ class _AddTodoState extends State<AddTodo> {
   }
 
   Future<void> saveTask() async {
-    showToast(titleController.text);
-
     Map<String, String> task = {
       'title': titleController.text,
       'description': desController.text,
